@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
-import UserController from "./app/controller/UserController";
 import app from "./config/server";
+import UserRouter from "./Router/UserRouter";
 
 const port = process.env.PORT || 3000;
 
-app.use("/api", UserController.index);
+app.use("/api", UserRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
