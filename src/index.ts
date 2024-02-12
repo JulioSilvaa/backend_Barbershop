@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import app from "./config/server";
+
 import UserController from "./app/controller/UserController";
+import app from "./config/server";
 
 const port = process.env.PORT || 3000;
 

@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String?
+  email     String?   @unique
+  imageUrl  String?
+  createdAt DateTime  @default(now())
+  phone     String?
+  bookings  Booking[]
+  barber    Barber?   @relation(fields: [barberId], references: [id])
+  barberId  String?
+}
+
+model Barbershop {
+  id       String    @id @default(uuid())
+  name     String
+  address  String
+  imageUrl String
+  services Service[]
+  bookings Booking[]
+  barbers  Barber[]
+}
+
+model Barber {
+  id           String     @id @default(uuid())
+  name         String
+  shortName    String
+  barbershopId String
+  barbershop   Barbershop @relation(fields: [barbershopId], references: [id])
+  bookings     Booking[]
+  User         User[]
+}
+
+model Service {
+  id           String     @id @default(uuid())
+  name         String
+  price        Decimal    @db.Decimal(10, 2)
+  barbershopId String
+  barbershop   Barbershop @relation(fields: [barbershopId], references: [id])
+  description  String
+  bookings     Booking[]
+  imageUrl     String
+}
+
+model Booking {
+  id           String     @id @default(uuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  serviceId    String
+  service      Service    @relation(fields: [serviceId], references: [id])
+  barbershopId String
+  barbershop   Barbershop @relation(fields: [barbershopId], references: [id])
+  barberId     String?
+  date         DateTime
+  createdAt    DateTime   @default(now())
+
+  Barber Barber? @relation(fields: [barberId], references: [id])
+}
